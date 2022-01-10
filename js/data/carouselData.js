@@ -11,4 +11,5 @@ export let corouselData = [
     'https://image.freepik.com/free-photo/glasses-near-laptop-reflect-light-from-screen-dark-copy-space_169016-14893.jpg',
     'https://image.freepik.com/free-photo/woman-vr-glasses-float-neon-space-with-cables-attached-her-metaverse-avatar-concept_1217-3926.jpg',
     'https://image.freepik.com/free-photo/portrait-young-woman-s-hands-being-raised-while-keeping-smartphone-it-showing-screen-with-index-finger-isolated-white_295783-8251.jpg',
+    'https://image.freepik.com/free-photo/smart-speaker-house-control-innovative-technology_53876-102350.jpg'
 ];

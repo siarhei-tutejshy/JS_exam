@@ -1,9 +1,8 @@
- class Slider {
+class Slider {
     constructor(data) {
         this.data = data;
         this.sliderElem = document.createElement('div');
         this.sliderElem.classList.add('slider');
-        
     }
 
     renderSlides() {
@@ -31,46 +30,61 @@
         });
         this.sliderElem.append(slideList);
     }
+
     renderArrows() {
         const arrowRight = document.createElement('div');
-        arrowRight.classList.add('arrow','right')
+        arrowRight.classList.add('arrow', 'right');
 
         const arrowLeft = document.createElement('div');
-        arrowLeft.classList.add('arrow','left');
+        arrowLeft.classList.add('arrow', 'left');
 
-        this.sliderElem.append(arrowRight,arrowLeft)
+        this.sliderElem.append(arrowRight, arrowLeft);
     }
 
     init() {
         this.renderSlides();
         this.renderArrows();
+
         const arrows = this.sliderElem.querySelectorAll('.arrow');
         const slideList = this.sliderElem.querySelector('.slide__list');
-        console.log(slideList)
-        console.log(100*(this.data.length - 1))
         let x = 0;
-        arrows.forEach(button => {
-            
-            button.addEventListener('click',(event)=>{
-                
-                if(event.target.classList.contains('right') && x < (100*(this.data.length - 1))){
-                    x+=100
+
+        let intervalId = setInterval(() => {
+            if (x < 100 * (this.data.length - 1)) {
+                x += 100;
+                slideList.style.transform = `translateX(-${x}%)`;
+            }
+            if (x >= 100 * (this.data.length - 1)) {
+                x = -100;
+                slideList.slideList.style.transform = `translateX(${x}%)`;
+            }
+        }, 3000);
+
+        arrows.forEach((button) => {
+            button.addEventListener('click', (event) => {
+                clearInterval(intervalId);
+
+                if (
+                    event.target.classList.contains('right') &&
+                    x <= 100 * (this.data.length - 1)
+                ) {
+                    x += 100;
                     slideList.style.transform = `translateX(-${x}%)`;
-                   
-                    console.log(x,'right')
                 }
 
-                if(event.target.classList.contains('left') && x > 0){
-                    
-                    x-=100
-                    
-                     slideList.style.transform = `translateX(-${x}%)`;
-                     console.log(x,'left')
+                if (x > 100 * (this.data.length - 1)) {
+                    x = 0;
+                    slideList.style.transform = `translateX(${x}%)`;
                 }
 
-            })
-        })
+                if (event.target.classList.contains('left') && x > 0) {
+                    x -= 100;
+                    slideList.style.transform = `translateX(-${x}%)`;
+                }
+            });
+        });
         return this.sliderElem;
     }
 }
- export default Slider
+
+export default Slider;

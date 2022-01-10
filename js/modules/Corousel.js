@@ -5,11 +5,13 @@ class Carousel {
         this.carouselElem.classList.add('carousel');
     }
 
-    renderSlides() {
+    renderCarouselItems() {
         const carouselWrapper = document.createElement('div');
         carouselWrapper.classList.add('carousel__wrapper');
+
         const carouselList = document.createElement('ul');
         carouselList.classList.add('carousel__list');
+
         this.data.forEach((item) => {
             const carouselItem = document.createElement('li');
             carouselItem.classList.add('carousel__item');
@@ -21,10 +23,8 @@ class Carousel {
 
             carouselItem.append(carouselLink);
             carouselList.append(carouselItem);
-            
-            
         });
-        carouselWrapper.append(carouselList)
+        carouselWrapper.append(carouselList);
         this.carouselElem.append(carouselWrapper);
     }
 
@@ -37,7 +37,6 @@ class Carousel {
 
         this.carouselElem.prepend(arrowLeft);
         this.carouselElem.append(arrowRight);
-
     }
 
     showPopup(href) {
@@ -53,51 +52,62 @@ class Carousel {
         const closeBtn = document.createElement('div');
         closeBtn.classList.add('close');
 
-        popUpContent.append(img,closeBtn)
-        popUp.addEventListener('click', (event)=> {
-            
-            if(event.target == img) {
-                event.stopPropagation()
-            }else {
+        popUpContent.append(img, closeBtn);
+
+        popUp.addEventListener('click', (event) => {
+            if (event.target == img) {
+                event.stopPropagation();
+            } else {
                 popUp.classList.add('hidden');
             }
-            
-        })
+        });
+
         popUp.append(popUpContent);
 
         return popUp;
     }
 
     init() {
-        this.renderSlides();
+        this.renderCarouselItems();
         this.renderArrows();
 
         const list = this.carouselElem.querySelector('.carousel__list');
         const arrows = this.carouselElem.querySelectorAll('.arrow');
         let x = 0;
+        let width = 220;
+
         arrows.forEach((button) => {
             button.addEventListener('click', (event) => {
+                let wrapWidth = this.carouselElem.querySelector('.carousel__wrapper').offsetWidth;
+                let visibleElCount = Math.floor(wrapWidth / width);
+                if (visibleElCount < 1) visibleElCount = 1;
+
                 if (
                     event.target.classList.contains('right') &&
-                    x < 220 * (this.data.length - 5)
+                    x < width * (this.data.length - visibleElCount)
                 ) {
-                    x += 220;
+                    x += width * visibleElCount;
+                    if (x >= width * (this.data.length - visibleElCount)) {
+                        x += width * (this.data.length - visibleElCount) - x;
+                    }
+
                     list.style.transform = `translateX(-${x}px)`;
-                    console.log(x)
                 }
 
                 if (event.target.classList.contains('left') && x > 0) {
-                    x -= 220;
+                    x -= width * visibleElCount;
+                    if (x <= 0) x = 0;
+
                     list.style.transform = `translateX(-${x}px)`;
                 }
             });
         });
-        
+
         list.addEventListener('click', (event) => {
             event.preventDefault();
-            
-            if(event.target.classList.contains('carousel__link') )document.body.append(this.showPopup(event.target.href));
-            
+
+            if (event.target.classList.contains('carousel__link'))
+                document.body.append(this.showPopup(event.target.href));
         });
 
         return this.carouselElem;
